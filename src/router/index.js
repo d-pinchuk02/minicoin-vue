@@ -8,6 +8,7 @@ Vue.use(VueRouter)
   {
     path: '/',
     name: 'Home',
+    meta: {layout: 'empty'},
     component: Home
   }
 ]
