@@ -30,6 +30,18 @@ const routes = [
     component: () => import('../views/DetailRecord.vue')
   },
   {
+    path: '/history',
+    name: 'history',
+    meta: { layout: 'main' },
+    component: () => import('../views/History.vue')
+  },
+  {
+    path: '/planning',
+    name: 'planning',
+    meta: { layout: 'main' },
+    component: () => import('../views/Planning.vue')
+  },
+  {
     path: '/record',
     name: 'record',
     meta: { layout: 'main' },
