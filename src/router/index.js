@@ -24,6 +24,12 @@ const routes = [
     component: () => import('../views/Register.vue')
   },
   {
+    path: '/categories',
+    name: 'categories',
+    meta: { layout: 'main' },
+    component: () => import('../views/Categories.vue')
+  },
+  {
     path: '/detail-record',
     name: 'detail-record',
     meta: { layout: 'main' },
@@ -40,6 +46,12 @@ const routes = [
     name: 'planning',
     meta: { layout: 'main' },
     component: () => import('../views/Planning.vue')
+  },
+  {
+    path: '/profile',
+    name: 'profile',
+    meta: { layout: 'main' },
+    component: () => import('../views/Profile.vue')
   },
   {
     path: '/record',
