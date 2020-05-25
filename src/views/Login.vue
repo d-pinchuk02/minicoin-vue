@@ -13,11 +13,15 @@
         <small 
           class="helper-text invalid" 
           v-if="$v.email.$dirty && !$v.email.required"
-        >Введите Email</small>
+        >
+          Введите Email
+        </small>
         <small 
           class="helper-text invalid" 
           v-else-if="$v.email.$dirty && !$v.email.email"
-        >Введите корректный Email</small>
+        >
+          Введите корректный Email
+        </small>
       </div>
       <div class="input-field">
         <input
@@ -30,11 +34,15 @@
         <small 
           class="helper-text invalid" 
           v-if="$v.password.$dirty && !$v.password.required"
-        >Введите пароль</small>
+        >
+          Введите пароль
+        </small>
         <small 
           class="helper-text invalid" 
           v-else-if="$v.password.$dirty && !$v.password.minLength"
-        >Пароль должен содержать не меньше {{$v.password.$params.minLength.min}} символов</small>
+        >
+          Пароль должен содержать не меньше {{$v.password.$params.minLength.min}} символов
+        </small>
       </div>
     </div>
     <div class="card-action">
@@ -55,6 +63,7 @@
 
 <script>
 import {email, required, minLength} from 'vuelidate/lib/validators'
+import messages from '@/utils/messages'
 
 export default {
   name: 'login',
@@ -66,12 +75,21 @@ export default {
     email: {email, required},
     password: {required, minLength: minLength(8)}
   },
+  mounted() {
+    if(messages[this.$route.query.message]) {
+      this.$message(messages[this.$route.query.message])
+    }
+  },
   methods: {
     submitHandler() {
       // TODO: real login
       if(this.$v.$invalid) {
         this.$v.$touch()
         return
+      }
+      const formData = {
+        email: this.email,
+        password: this.password
       }
       this.$router.push('/')
     }
