@@ -67,7 +67,7 @@
       </div>
       <p>
         <label>
-          <input type="checkbox" />
+          <input type="checkbox" v-model="agree"/>
           <span>С правилами согласен</span>
         </label>
       </p>
@@ -96,12 +96,14 @@ export default {
   data: () => ({
     email: '',
     password: '',
-    name: ''
+    name: '',
+    agree: false
   }),
   validations: {
     email: {email, required},
     password: {required, minLength: minLength(8)},
-    name: {required, minLength: minLength(2)}
+    name: {required, minLength: minLength(2)},
+    agree: {checked: v => v}
   },
   methods: {
     submitHandler() {
