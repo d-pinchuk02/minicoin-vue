@@ -21,6 +21,11 @@ export default new Vuex.Store({
     error: s => s.error
   },
   actions: {
+    async fetchCurrency() {
+      const key = process.env.VUE_APP_EXCHANGERATE_API_KEY
+      const res = await fetch(`https://v6.exchangerate-api.com/v6/${key}/latest/USD`)
+      return await res.json()
+    }
   },
   modules: {
     auth, info
