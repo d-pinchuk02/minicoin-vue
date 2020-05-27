@@ -14,7 +14,10 @@
       <HomeBill 
         :rates="currency.conversion_rates"
       />
-      <HomeCurrency />
+      <HomeCurrency
+        :rates="currency.conversion_rates"
+        :date="currency.time_last_update_unix"
+      />
     </div>
   </div>
 </template>
