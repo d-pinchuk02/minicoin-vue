@@ -24,8 +24,7 @@ export default {
   }),
   computed: {
     base() {
-      // Our base currency is USD
-      return this.$store.getters.info.bill
+      return this.$store.getters.info.bill / (this.rates['UAH'] / this.rates['EUR'])
     }
   },
   methods: {
