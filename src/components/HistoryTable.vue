@@ -12,16 +12,20 @@
     </thead>
 
     <tbody>
-      <tr>
-        <td>1</td>
-        <td>1212</td>
-        <td>12.12.32</td>
-        <td>name</td>
+      <tr v-for="(record, idx) of records" :key="record.id">
+        <td>{{idx + 1}}</td>
+        <td>{{record.amount | currency}}</td>
+        <td>{{record.date | date('datetime')}}</td>
+        <td>{{record.categoryName}}</td>
         <td>
-          <span class="white-text badge red">Расход</span>
+          <span class="white-text badge" :class="[record.typeClass]">{{record.typeText}}</span>
         </td>
         <td>
-          <button class="btn-small btn">
+          <button
+            class="btn-small btn"
+            v-tooltip="'Посмотреть запись'"
+            @click="$router.push(`/detail/${record.id}`)"
+          >
             <i class="material-icons">open_in_new</i>
           </button>
         </td>
@@ -32,6 +36,11 @@
 
 <script>
 export default {
-  
+  props: {
+    records: {
+      required: true,
+      type: Array
+    }
+  }
 }
 </script>
