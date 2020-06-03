@@ -17,15 +17,17 @@
 </template>
 
 <script>
+import localizeFilter from '@/filters/localize.filter'
+
 export default {
   props: ['value'],
   data: () => ({
     links: [
-      { title: 'Счет', url: '/', exact: true },
-      { title: 'История', url: '/history' },
-      { title: 'Планирование', url: '/planning' },
-      { title: 'Новая запись', url: '/record' },
-      { title: 'Категории', url: '/categories' }
+      { title: localizeFilter('sidebar.bill'), url: '/', exact: true },
+      { title: localizeFilter('sidebar.history'), url: '/history' },
+      { title: localizeFilter('sidebar.planning'), url: '/planning' },
+      { title: localizeFilter('sidebar.record'), url: '/record' },
+      { title: localizeFilter('sidebar.categories'), url: '/categories' }
     ]
   })
 }

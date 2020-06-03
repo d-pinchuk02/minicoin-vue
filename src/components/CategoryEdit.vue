@@ -2,7 +2,7 @@
   <div class="col s12 m6">
     <div>
       <div class="page-subtitle">
-        <h4>Редактировать</h4>
+        <h4>{{'categoryedit.title'| localize}}</h4>
       </div>
 
       <form @submit.prevent="submitHandler">
@@ -14,7 +14,7 @@
               :value="c.id"
             >{{ c.title }}</option>
           </select>
-          <label>Выберите категорию</label>
+          <label>{{'shared.selectCategory'| localize}}</label>
         </div>
 
         <div class="input-field">
@@ -24,12 +24,12 @@
             v-model="title"
             :class="{invalid: $v.title.$dirty && !$v.title.required}"
           />
-          <label for="name">Название</label>
+          <label for="name">{{'categoryedit.name'| localize}}</label>
           <span
             class="helper-text invalid"
             v-if="$v.title.$dirty && !$v.title.required"
           >
-            Введите название категории
+            {{'categoryedit.error.enterTitle'| localize}}
           </span>
         </div>
 
@@ -41,17 +41,17 @@
             :class="{invalid: $v.limit.$dirty && !$v.limit.minValue}"
             min="1"
           />
-          <label for="limit">Лимит</label>
+          <label for="limit">{{'shared.limit'| localize}}</label>
           <span
             class="helper-text invalid"
             v-if="$v.limit.$dirty && !$v.limit.minValue"
           >
-            Минимальное значение: {{$v.limit.$params.minValue.min}}
+            {{'categoryedit.error.minValue'| localize}}: {{$v.limit.$params.minValue.min}}
           </span>
         </div>
 
         <button class="btn waves-effect waves-light" type="submit">
-          Обновить
+          {{'shared.update'| localize}}
           <i class="material-icons right">send</i>
         </button>
       </form>
@@ -110,6 +110,7 @@ export default {
           limit: this.limit
         }
         await this.$store.dispatch('updateCategory', categoryData)
+        // TODO: translate message
         this.$message('Категория успешно обновлена')
         this.$emit('updated', categoryData)
       } catch (e) {}

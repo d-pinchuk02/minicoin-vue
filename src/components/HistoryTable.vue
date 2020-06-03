@@ -3,11 +3,11 @@
     <thead>
       <tr>
         <th>#</th>
-        <th>Сумма</th>
-        <th>Дата</th>
-        <th>Категория</th>
-        <th>Тип</th>
-        <th>Открыть</th>
+        <th>{{'shared.amount' | localize}}</th>
+        <th>{{'shared.date' | localize}}</th>
+        <th>{{'shared.category' | localize}}</th>
+        <th>{{'shared.type' | localize}}</th>
+        <th>{{'historytable.open' | localize}}</th>
       </tr>
     </thead>
 
@@ -23,7 +23,7 @@
         <td>
           <button
             class="btn-small btn"
-            v-tooltip="'Посмотреть запись'"
+            v-tooltip="localizeFilter('historytable.openRecord')"
             @click="$router.push(`/detail/${record.id}`)"
           >
             <i class="material-icons">open_in_new</i>
@@ -35,11 +35,18 @@
 </template>
 
 <script>
+import localizeFilter from '@/filters/localize.filter'
+
 export default {
   props: {
     records: {
       required: true,
       type: Array
+    }
+  },
+  methods: {
+    localizeFilter(key) {
+      return localizeFilter(key)
     }
   }
 }

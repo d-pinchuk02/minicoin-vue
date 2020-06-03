@@ -5,7 +5,7 @@
       <div class="app-main-layout">
         <Navbar @click="sidebarOpen = !sidebarOpen" />
 
-        <Sidebar v-model="sidebarOpen" />
+        <Sidebar v-model="sidebarOpen" :key="locale" />
 
         <main class="app-content" :class="{full: !sidebarOpen}">
           <div class="app-page">
@@ -48,10 +48,14 @@ export default {
   computed: {
     error() {
       return this.$store.getters.error
+    },
+    locale() {
+      return this.$store.getters.info.locale
     }
   },
   watch: {
     error (fbError) {
+      // TODO: translate message
       this.$error(messages[fbError.code] || 'Что-то пошло не так')
     }
   }

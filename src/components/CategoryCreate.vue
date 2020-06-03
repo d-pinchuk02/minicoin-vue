@@ -2,7 +2,7 @@
   <div class="col s12 m6">
     <div>
       <div class="page-subtitle">
-        <h4>Создать</h4>
+        <h4>{{'categorycreate.title'| localize}}</h4>
       </div>
 
       <form @submit.prevent="submitHandler">
@@ -13,12 +13,12 @@
             v-model="title"
             :class="{invalid: $v.title.$dirty && !$v.title.required}"
           />
-          <label for="name">Название</label>
+          <label for="name">{{'categorycreate.name'| localize}}</label>
           <span
             class="helper-text invalid"
             v-if="$v.title.$dirty && !$v.title.required"
           >
-            Введите название категории
+            {{'categorycreate.error.enterTitle'| localize}}
           </span>
         </div>
 
@@ -29,17 +29,17 @@
             v-model.number="limit"
             :class="{invalid: $v.limit.$dirty && !$v.limit.minValue}"
           />
-          <label for="limit">Лимит</label>
+          <label for="limit">{{'shared.limit'| localize}}</label>
           <span
             class="helper-text invalid"
             v-if="$v.limit.$dirty && !$v.limit.minValue"
           >
-            Минимальное значение: {{$v.limit.$params.minValue.min}}
+            {{'categorycreate.error.minValue'| localize}}: {{$v.limit.$params.minValue.min}}
           </span>
         </div>
 
         <button class="btn waves-effect waves-light" type="submit">
-          Создать
+          {{'shared.create'| localize}}
           <i class="material-icons right">send</i>
         </button>
       </form>
@@ -78,6 +78,7 @@ export default {
         this.title = ''
         this.limit = 1
         this.$v.$reset()
+        // TODO: translate message
         this.$message('Категория была создана')
 
         this.$emit('created', category)

@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="page-title">
-      <h3>Профиль</h3>
+      <h3>{{'profile.title' | localize}}</h3>
     </div>
 
     <form class="form" @submit.prevent="submitHandler">
@@ -12,12 +12,12 @@
           v-model.trim="name"
           :class="{invalid: $v.name.$dirty && !$v.name.required}"
         />
-        <label for="name">Имя</label>
+        <label for="name">{{'profile.name' | localize}}</label>
         <small 
           class="helper-text invalid" 
           v-if="$v.name.$dirty && !$v.name.required"
         >
-          Введите имя
+          {{'profile.error.enterName' | localize}}
         </small>
       </div>
 
@@ -31,7 +31,7 @@
       </div>
 
       <button class="btn waves-effect waves-light" type="submit">
-        Обновить
+        {{'shared.update' | localize}}
         <i class="material-icons right">send</i>
       </button>
     </form>

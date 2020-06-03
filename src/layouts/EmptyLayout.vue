@@ -15,6 +15,7 @@ export default {
   },
   watch: {
     error (fbError) {
+      // TODO: translate message
       this.$error(messages[fbError.code] || 'Что-то пошло не так')
     }
   }
