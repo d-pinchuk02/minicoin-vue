@@ -18,6 +18,7 @@ import 'materialize-css/dist/js/materialize.min'
 import firebase from 'firebase/app'
 import 'firebase/auth'
 import 'firebase/database'
+import vuetify from './plugins/vuetify';
 
 Vue.config.productionTip = false
 
@@ -52,6 +53,7 @@ firebase.auth().onAuthStateChanged(() => {
     app = new Vue({
       router,
       store,
+      vuetify,
       render: h => h(App)
     }).$mount('#app')
   }
