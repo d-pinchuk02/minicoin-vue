@@ -15,7 +15,7 @@
 
         <div class="fixed-action-btn">
           <router-link class="btn-floating btn-large blue" to="/record">
-            <i class="large material-icons">add</i>
+            <v-icon dark>mdi-plus</v-icon>
           </router-link>
         </div>
       </div>

@@ -32,7 +32,7 @@
 
       <button class="btn waves-effect waves-light" type="submit">
         {{'shared.update' | localize}}
-        <i class="material-icons right">send</i>
+        <v-icon dark right>mdi-send</v-icon>
       </button>
     </form>
   </div>

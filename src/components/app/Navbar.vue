@@ -3,7 +3,7 @@
     <div class="nav-wrapper">
       <div class="navbar-left">
         <a href="#" @click.prevent="$emit('click')">
-          <i class="material-icons black-text">dehaze</i>
+          <v-icon right>mdi-menu</v-icon>
         </a>
         <span class="black-text">{{ date | date('datetime') }}</span>
       </div>
@@ -17,19 +17,19 @@
             ref="dropdown"
           >
             {{name}}
-            <i class="material-icons right">arrow_drop_down</i>
+            <v-icon right>mdi-chevron-down</v-icon>
           </a>
 
           <ul id="dropdown" class="dropdown-content">
             <li>
               <router-link to="/profile" class="black-text">
-                <i class="material-icons">account_circle</i>{{'navbar.profile' | localize}}
+                <v-icon right>mdi-account-circle</v-icon>{{'navbar.profile' | localize}}
               </router-link>
             </li>
             <li class="divider" tabindex="-1"></li>
             <li>
               <a href="#" class="black-text" @click.prevent="logout">
-                <i class="material-icons">assignment_return</i>{{'navbar.logout' | localize}}
+                <v-icon right>mdi-logout</v-icon>{{'navbar.logout' | localize}}
               </a>
             </li>
           </ul>

@@ -76,7 +76,7 @@
       <div>
         <button class="btn waves-effect waves-light auth-submit" type="submit">
           {{'shared.signup' | localize}}
-          <i class="material-icons right">send</i>
+          <v-icon dark right>mdi-send</v-icon>
         </button>
       </div>
 

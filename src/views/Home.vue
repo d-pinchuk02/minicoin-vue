@@ -4,7 +4,7 @@
       <h3>{{'home.title' | localize}}</h3>
 
       <button class="btn waves-effect waves-light btn-small" @click="refresh">
-        <i class="material-icons">refresh</i>
+        <v-icon dark>mdi-refresh</v-icon>
       </button>
     </div>
 

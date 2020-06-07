@@ -26,7 +26,7 @@
             v-tooltip="localizeFilter('historytable.openRecord')"
             @click="$router.push(`/detail/${record.id}`)"
           >
-            <i class="material-icons">open_in_new</i>
+            <v-icon dark>mdi-open-in-new</v-icon>
           </button>
         </td>
       </tr>
