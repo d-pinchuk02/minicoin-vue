@@ -1,68 +1,48 @@
 <template>
-  <form class="card auth-card" @submit.prevent="submitHandler">
-    <div class="card-content">
-      <span class="card-title">{{ this.$title('login.title') }}</span>
-      <div class="input-field">
-        <input 
-          id="email" 
-          type="email" 
+  <v-card class="elevation-3">
+    <v-toolbar flat>
+      <v-toolbar-title>{{ this.$title('login.title') }}</v-toolbar-title>
+    </v-toolbar>
+    <v-card-text>
+      <v-form v-model="isValid" @submit.prevent="submitHandler">
+        <v-text-field
+          :label="'shared.email' | localize"
+          :rules="emailRules"
+          name="email"
+          prepend-icon="mdi-at"
+          type="email"
           v-model.trim="email"
-          :class="{invalid: ($v.email.$dirty && !$v.email.required) || ($v.email.$dirty && !$v.email.email)}"
-        />
-        <label for="email">{{'shared.email' | localize}}</label>
-        <small 
-          class="helper-text invalid" 
-          v-if="$v.email.$dirty && !$v.email.required"
-        >
-          {{'shared.errors.enterEmail' | localize}}
-        </small>
-        <small 
-          class="helper-text invalid" 
-          v-else-if="$v.email.$dirty && !$v.email.email"
-        >
-          {{'shared.errors.enterCorrectEmail' | localize}}
-        </small>
-      </div>
-      <div class="input-field">
-        <input
-          id="password" 
-          type="password" 
-          v-model.trim="password"
-          :class="{invalid: ($v.password.$dirty && !$v.password.required) || ($v.password.$dirty && !$v.password.minLength)}"
-        />
-        <label for="password">{{'shared.password' | localize}}</label>
-        <small 
-          class="helper-text invalid" 
-          v-if="$v.password.$dirty && !$v.password.required"
-        >
-          {{'shared.errors.enterPassword' | localize}}
-        </small>
-        <small 
-          class="helper-text invalid" 
-          v-else-if="$v.password.$dirty && !$v.password.minLength"
-        >
-          {{'shared.errors.minLength' | localize}}: {{$v.password.$params.minLength.min}}
-        </small>
-      </div>
-    </div>
-    <div class="card-action">
-      <div>
-        <button class="btn waves-effect waves-light auth-submit" type="submit">
-          {{'shared.signin' | localize}}
-          <v-icon dark right>mdi-send</v-icon>
-        </button>
-      </div>
+          required
+        ></v-text-field>
 
-      <p class="center">
-        {{'login.noAccount' | localize}}
-        <router-link to="/register">{{'shared.signup' | localize}}</router-link>
-      </p>
-    </div>
-  </form>
+        <v-text-field
+          :label="'shared.password' | localize"
+          :rules="passwordRules"
+          name="password"
+          prepend-icon="mdi-lock"
+          type="password"
+          v-model.trim="password"
+          required
+        ></v-text-field>
+      </v-form>
+    </v-card-text>
+    <v-card-actions>
+      <v-btn
+        color="primary"
+        to="register"
+        text
+      >{{'shared.signup' | localize}}</v-btn>
+      <v-spacer></v-spacer>
+      <v-btn
+        @click.prevent="submitHandler"
+        color="primary"
+        :disabled="!isValid"
+      >{{'shared.signin' | localize}}</v-btn>
+    </v-card-actions>
+  </v-card>
 </template>
 
 <script>
-import {email, required, minLength} from 'vuelidate/lib/validators'
 import localizeFilter from '@/filters/localize.filter'
 
 export default {
@@ -74,12 +54,17 @@ export default {
   },
   data: () => ({
     email: '',
-    password: ''
+    password: '',
+    isValid: true,
+    emailRules: [ 
+        v => !!v || localizeFilter('shared.errors.enterEmail'), 
+        v => /^\S+@\S+\.\S+$/.test(v) || localizeFilter('shared.errors.enterCorrectEmail') 
+    ],
+    passwordRules: [ 
+      v => !!v || localizeFilter('shared.errors.enterPassword'), 
+      v => (v && v.length >= 8) || localizeFilter('shared.errors.minLength') + ': ' + 8
+    ]
   }),
-  validations: {
-    email: {email, required},
-    password: {required, minLength: minLength(8)}
-  },
   mounted() {
     if (this.$route.query.locale) {
         let info = {locale: this.$route.query.locale}
@@ -92,10 +77,11 @@ export default {
   },
   methods: {
     async submitHandler() {
-      if(this.$v.$invalid) {
-        this.$v.$touch()
+      if(!this.isValid) {
+        console.log('invalid')
         return
       }
+      
       const formData = {
         email: this.email,
         password: this.password
