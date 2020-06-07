@@ -1,95 +1,64 @@
 <template>
-  <form class="card auth-card" @submit.prevent="submitHandler">
-    <div class="card-content">
-      <span class="card-title">{{ this.$title('register.title') }}</span>
-      <div class="input-field">
-        <input 
-          id="email" 
-          type="email" 
+  <v-card class="elevation-3">
+    <v-toolbar flat>
+      <v-toolbar-title>{{ this.$title('register.title') }}</v-toolbar-title>
+    </v-toolbar>
+    <v-card-text>
+      <v-form v-model="isValid" @submit.prevent="submitHandler">
+        <v-text-field
+          :label="'shared.email' | localize"
+          :rules="emailRules"
+          name="email"
+          prepend-icon="mdi-at"
+          type="email"
           v-model.trim="email"
-          :class="{invalid: ($v.email.$dirty && !$v.email.required) || ($v.email.$dirty && !$v.email.email)}"
-        />
-        <label for="email">{{'shared.email' | localize}}</label>
-        <small 
-          class="helper-text invalid" 
-          v-if="$v.email.$dirty && !$v.email.required"
-        >
-          {{'shared.errors.enterEmail' | localize}}
-        </small>
-        <small 
-          class="helper-text invalid" 
-          v-else-if="$v.email.$dirty && !$v.email.email"
-        >
-          {{'shared.errors.enterCorrectEmail' | localize}}
-        </small>
-      </div>
-      <div class="input-field">
-        <input
-          id="password" 
-          type="password" 
-          v-model.trim="password"
-          :class="{invalid: ($v.password.$dirty && !$v.password.required) || ($v.password.$dirty && !$v.password.minLength)}"
-        />
-        <label for="password">{{'shared.password' | localize}}</label>
-        <small 
-          class="helper-text invalid" 
-          v-if="$v.password.$dirty && !$v.password.required"
-        >
-          {{'shared.errors.enterPassword' | localize}}
-        </small>
-        <small 
-          class="helper-text invalid" 
-          v-else-if="$v.password.$dirty && !$v.password.minLength"
-        >
-          {{'shared.errors.minLength' | localize}} {{$v.password.$params.minLength.min}}
-        </small>
-      </div>
-      <div class="input-field">
-        <input
-          id="name"
-          type="text"
-          v-model.trim="name"
-          :class="{invalid: ($v.name.$dirty && !$v.name.required) || ($v.name.$dirty && !$v.name.minLength)}"
-        />
-        <label for="name">{{'shared.name' | localize}}</label>
-        <small 
-          class="helper-text invalid" 
-          v-if="$v.name.$dirty && !$v.name.required"
-        >
-          {{'shared.errors.enterName' | localize}}
-        </small>
-        <small 
-          class="helper-text invalid" 
-          v-else-if="$v.name.$dirty && !$v.name.minLength"
-        >
-          {{'shared.errors.minLength' | localize}} {{$v.name.$params.minLength.min}}
-        </small>
-      </div>
-      <p>
-        <label>
-          <input type="checkbox" v-model="agree"/>
-          <span>{{'register.agree' | localize}}</span>
-        </label>
-      </p>
-    </div>
-    <div class="card-action">
-      <div>
-        <button class="btn waves-effect waves-light auth-submit" type="submit">
-          {{'shared.signup' | localize}}
-          <v-icon dark right>mdi-send</v-icon>
-        </button>
-      </div>
+          required
+        ></v-text-field>
 
-      <p class="center">
-        {{'register.hasAccount' | localize}}
-        <router-link to="/login">{{'shared.signin' | localize}}!</router-link>
-      </p>
-    </div>
-  </form>
+        <v-text-field
+          :label="'shared.password' | localize"
+          :rules="passwordRules"
+          name="password"
+          prepend-icon="mdi-lock"
+          type="password"
+          v-model.trim="password"
+          required
+        ></v-text-field>
+
+        <v-text-field
+          :label="'shared.name' | localize"
+          :rules="nameRules"
+          name="name"
+          prepend-icon="mdi-format-letter-case"
+          type="name"
+          v-model.trim="name"
+          required
+        ></v-text-field>
+
+        <v-checkbox
+          :label="'register.agree' | localize"
+          v-model="agree"
+        ></v-checkbox>
+      </v-form>
+    </v-card-text>
+    <v-card-actions>
+      <v-btn
+        color="primary"
+        to="login"
+        text
+      >{{'shared.signin' | localize}}</v-btn>
+      <v-spacer></v-spacer>
+      <v-btn
+        @click.prevent="submitHandler"
+        color="primary"
+        :disabled="!isValid"
+      >{{'shared.signup' | localize}}</v-btn>
+    </v-card-actions>
+  </v-card>
 </template>
 
 <script>
-import {email, required, minLength} from 'vuelidate/lib/validators'
+import localizeFilter from '@/filters/localize.filter'
 
 export default {
   name: 'register',
@@ -102,18 +71,25 @@ export default {
     email: '',
     password: '',
     name: '',
-    agree: false
+    agree: false,
+    isValid: false,
+    emailRules: [ 
+      v => !!v || localizeFilter('shared.errors.enterEmail'),
+      v => /^\S+@\S+\.\S+$/.test(v) || localizeFilter('shared.errors.enterCorrectEmail')
+    ],
+    passwordRules: [ 
+      v => !!v || localizeFilter('shared.errors.enterPassword'),
+      v => (v && v.length >= 8) || localizeFilter('shared.errors.minLength') + ': ' + 8
+    ],
+    nameRules: [
+      v => !!v || localizeFilter('shared.errors.enterName'),
+      v => (v && v.length >= 2) || localizeFilter('shared.errors.minLength') + ': ' + 2
+    ]
   }),
-  validations: {
-    email: {email, required},
-    password: {required, minLength: minLength(8)},
-    name: {required, minLength: minLength(2)},
-    agree: {checked: v => v}
-  },
   methods: {
     async submitHandler() {
-      if(this.$v.$invalid) {
-        this.$v.$touch()
+      if(!this.isValid || !this.agree) {
+        console.log('invalid')
         return
       }
 
