@@ -35,6 +35,11 @@ import {Doughnut} from 'vue-chartjs'
 
 export default {
   name: 'history',
+  metaInfo() {
+    return {
+      title: this.$title('history.title')
+    }
+  },
   extends: Doughnut,
   mixins: [paginationMixin],
   data: () => ({

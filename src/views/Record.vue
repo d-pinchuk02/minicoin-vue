@@ -92,7 +92,12 @@ import {required, minValue} from 'vuelidate/lib/validators'
 import {mapGetters} from 'vuex'
 
 export default {
-  name: 'record',
+  name: 'newrecord',
+  metaInfo() {
+    return {
+      title: this.$title('newrecord.title')
+    }
+  },
   data: () => ({
     categories: [],
     loading: true,
