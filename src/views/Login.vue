@@ -9,18 +9,18 @@
           v-model.trim="email"
           :class="{invalid: ($v.email.$dirty && !$v.email.required) || ($v.email.$dirty && !$v.email.email)}"
         />
-        <label for="email">Email</label>
+        <label for="email">{{'shared.email' | localize}}</label>
         <small 
           class="helper-text invalid" 
           v-if="$v.email.$dirty && !$v.email.required"
         >
-          Введите Email
+          {{'shared.errors.enterEmail' | localize}}
         </small>
         <small 
           class="helper-text invalid" 
           v-else-if="$v.email.$dirty && !$v.email.email"
         >
-          Введите корректный Email
+          {{'shared.errors.enterCorrectEmail' | localize}}
         </small>
       </div>
       <div class="input-field">
@@ -30,32 +30,32 @@
           v-model.trim="password"
           :class="{invalid: ($v.password.$dirty && !$v.password.required) || ($v.password.$dirty && !$v.password.minLength)}"
         />
-        <label for="password">Пароль</label>
+        <label for="password">{{'shared.password' | localize}}</label>
         <small 
           class="helper-text invalid" 
           v-if="$v.password.$dirty && !$v.password.required"
         >
-          Введите пароль
+          {{'shared.errors.enterPassword' | localize}}
         </small>
         <small 
           class="helper-text invalid" 
           v-else-if="$v.password.$dirty && !$v.password.minLength"
         >
-          Пароль должен содержать не меньше {{$v.password.$params.minLength.min}} символов
+          {{'shared.errors.minLength' | localize}}: {{$v.password.$params.minLength.min}}
         </small>
       </div>
     </div>
     <div class="card-action">
       <div>
         <button class="btn waves-effect waves-light auth-submit" type="submit">
-          Войти
+          {{'shared.signin' | localize}}
           <i class="material-icons right">send</i>
         </button>
       </div>
 
       <p class="center">
-        Нет аккаунта?
-        <router-link to="/register">Зарегистрироваться</router-link>
+        {{'login.noAccount' | localize}}
+        <router-link to="/register">{{'shared.signup' | localize}}</router-link>
       </p>
     </div>
   </form>
@@ -92,7 +92,6 @@ export default {
   },
   methods: {
     async submitHandler() {
-      // TODO: real login
       if(this.$v.$invalid) {
         this.$v.$touch()
         return
