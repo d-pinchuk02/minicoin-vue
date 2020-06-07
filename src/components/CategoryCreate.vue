@@ -49,6 +49,7 @@
 
 <script>
 import {required, minValue} from 'vuelidate/lib/validators'
+import localizeFilter from '@/filters/localize.filter'
 
 export default {
   data: () => ({
@@ -78,8 +79,7 @@ export default {
         this.title = ''
         this.limit = 1
         this.$v.$reset()
-        // TODO: translate message
-        this.$message('Категория была создана')
+        this.$message(localizeFilter('msg.categoryCreated'))
 
         this.$emit('created', category)
       } catch (e) {}

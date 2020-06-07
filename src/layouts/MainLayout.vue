@@ -26,7 +26,7 @@
 <script>
 import Navbar from "@/components/app/Navbar"
 import Sidebar from "@/components/app/Sidebar"
-import messages from '@/utils/messages'
+import localizeFilter from '@/filters/localize.filter'
 
 export default {
   name: "main-layout",
@@ -55,8 +55,7 @@ export default {
   },
   watch: {
     error (fbError) {
-      // TODO: translate message
-      this.$error(messages[fbError.code] || 'Что-то пошло не так')
+      this.$error(localizeFilter(fbError.code) || localizeFilter('msg.unknownError'))
     }
   }
 };

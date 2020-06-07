@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import messages from '@/utils/messages'
+import localizeFilter from '@/filters/localize.filter'
 
 export default {
   computed: {
@@ -15,8 +15,7 @@ export default {
   },
   watch: {
     error (fbError) {
-      // TODO: translate message
-      this.$error(messages[fbError.code] || 'Что-то пошло не так')
+      this.$error(localizeFilter(fbError.code) || localizeFilter('msg.unknownError'))
     }
   }
 }
