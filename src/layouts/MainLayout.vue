@@ -55,7 +55,7 @@ export default {
   },
   watch: {
     error (fbError) {
-      this.$error(localizeFilter(fbError.code) || localizeFilter('msg.unknownError'))
+      this.$error(localizeFilter('msg.' + fbError.code) || localizeFilter('msg.unknownError'))
     }
   }
 };
