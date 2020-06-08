@@ -1,26 +1,31 @@
 <template>
-  <div >
+  <v-app>
+    <Navbar @click="sidebarOpen = !sidebarOpen" />
+
+    <Sidebar v-model="sidebarOpen" :key="locale" />
+
     <Loader v-if="loading" />
-    <div v-else>
-      <div class="app-main-layout">
-        <Navbar @click="sidebarOpen = !sidebarOpen" />
+    <v-content v-else>
+      <v-container
+        fluid
+        class="grey lighten-4 fill-height"
+      >
+        <router-view />
+      </v-container>
+    </v-content>
 
-        <Sidebar v-model="sidebarOpen" :key="locale" />
-
-        <main class="app-content" :class="{full: !sidebarOpen}">
-          <div class="app-page">
-            <router-view />
-          </div>
-        </main>
-
-        <div class="fixed-action-btn">
-          <router-link class="btn-floating btn-large blue" to="/record">
-            <v-icon dark>mdi-plus</v-icon>
-          </router-link>
-        </div>
-      </div>
-    </div>
-  </div>
+    <v-btn
+      fixed
+      dark
+      fab
+      bottom
+      right
+      color="blue"
+      to="record"
+    >
+      <v-icon>mdi-plus</v-icon>
+    </v-btn>
+  </v-app>
 </template>
 
 <script>
