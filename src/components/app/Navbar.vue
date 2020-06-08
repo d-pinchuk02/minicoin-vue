@@ -1,50 +1,55 @@
 <template>
-  <nav class="navbar orange lighten-1">
-    <div class="nav-wrapper">
-      <div class="navbar-left">
-        <a href="#" @click.prevent="$emit('click')">
-          <v-icon right>mdi-menu</v-icon>
-        </a>
-        <span class="black-text">{{ date | date('datetime') }}</span>
-      </div>
+  <v-app-bar
+    app
+    clipped-left
+    color="orange lighten-1"
+  >
+    <v-app-bar-nav-icon @click.prevent="$emit('click')"></v-app-bar-nav-icon>
 
-      <ul class="right hide-on-small-and-down">
-        <li>
-          <a
-            class="dropdown-trigger black-text"
-            href="#"
-            data-target="dropdown"
-            ref="dropdown"
+    <span class="title font-weight-light">{{ date | date('datetime') }}</span>
+
+    <v-spacer/>
+
+    <v-menu offset-y>
+      <template v-slot:activator="{ on }">
+        <v-btn
+          icon large
+          v-on="on"
+        >
+          <v-avatar
+            size="32px"
+            item
           >
-            {{name}}
-            <v-icon right>mdi-chevron-down</v-icon>
-          </a>
+            <v-icon large>mdi-account-circle</v-icon>
+          </v-avatar>
+        </v-btn>
+      </template>
+      <v-list>
+        <v-list-item @click="toProfile">
+          <v-list-item-icon>
+            <v-icon right>mdi-account-circle</v-icon>
+          </v-list-item-icon>
+          <v-list-item-title>{{ 'navbar.profile' | localize}}</v-list-item-title>
+        </v-list-item>
 
-          <ul id="dropdown" class="dropdown-content">
-            <li>
-              <router-link to="/profile" class="black-text">
-                <v-icon right>mdi-account-circle</v-icon>{{'navbar.profile' | localize}}
-              </router-link>
-            </li>
-            <li class="divider" tabindex="-1"></li>
-            <li>
-              <a href="#" class="black-text" @click.prevent="logout">
-                <v-icon right>mdi-logout</v-icon>{{'navbar.logout' | localize}}
-              </a>
-            </li>
-          </ul>
-        </li>
-      </ul>
-    </div>
-  </nav>
+        <v-list-item @click="logout">
+          <v-list-item-icon>
+            <v-icon right>mdi-logout</v-icon>
+          </v-list-item-icon>
+          <v-list-item-title>{{ 'navbar.logout' | localize}}</v-list-item-title>
+        </v-list-item>
+      </v-list>
+    </v-menu>
+  </v-app-bar>
 </template>
 
 <script>
+import localizeFilter from '@/filters/localize.filter'
+
 export default {
   data: () => ({
     date: new Date(),
     interval: null,
-    dropdown: null
   }),
   methods: {
     async logout() {
@@ -57,6 +62,9 @@ export default {
           locale: locale
         }
       })
+    },
+    toProfile() {
+      this.$router.push('/profile')
     }
   },
   computed: {
@@ -68,16 +76,9 @@ export default {
     this.interval = setInterval(() => {
       this.date = new Date()
     }, 1000)
-    this.dropdown = M.Dropdown.init(this.$refs.dropdown, {
-      constrainWidth: true
-    })
   },
   beforeDestroy() {
     clearInterval(this.interval)
-    if(this.dropdown && this.dropdown.destroy)
-    {
-      this.dropdown.destroy()
-    }
   }
 }
 </script>
