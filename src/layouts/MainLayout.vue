@@ -3,14 +3,16 @@
     <Navbar @click="sidebarOpen = !sidebarOpen" />
     <Sidebar :value="sidebarOpen" :key="locale" />
     <Loader v-if="loading" />
-    <v-content v-else>
-      <v-container
-        fluid
-        class="grey lighten-4 fill-height"
-      >
-        <router-view />
-      </v-container>
-    </v-content>
+    <v-main v-else>
+      <v-content>
+        <v-container
+          fluid
+          class="pa-4"
+        >
+          <router-view />
+        </v-container>
+      </v-content>
+    </v-main>
 
     <v-btn
       fixed
@@ -61,5 +63,5 @@ export default {
       this.$error(localizeFilter('msg.' + fbError.code) || localizeFilter('msg.unknownError'))
     }
   }
-};
+}
 </script>
