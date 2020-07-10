@@ -1,9 +1,7 @@
 <template>
   <v-app>
     <Navbar @click="sidebarOpen = !sidebarOpen" />
-
-    <Sidebar v-model="sidebarOpen" :key="locale" />
-
+    <Sidebar :value="sidebarOpen" :key="locale" />
     <Loader v-if="loading" />
     <v-content v-else>
       <v-container
