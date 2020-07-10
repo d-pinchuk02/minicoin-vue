@@ -1,46 +1,47 @@
 <template>
   <div>
-    <div class="page-title">
-      <h3>{{'profile.title' | localize}}</h3>
-    </div>
+    <h1>{{'profile.title' | localize}}</h1>
 
-    <form class="form" @submit.prevent="submitHandler">
-      <div class="input-field">
-        <input
-          id="name"
-          type="text"
+    <v-divider class="mb-4"></v-divider>
+
+    <v-col cols="12" xs="12" sm="6">
+      <v-form v-model="isValid" @submit.prevent="submitHandler">
+        <v-text-field
+          :label="'profile.name' | localize"
+          :rules="nameRules"
+          name="name"
+          prepend-icon="mdi-format-letter-case"
+          type="name"
           v-model.trim="name"
-          :class="{invalid: $v.name.$dirty && !$v.name.required}"
-        />
-        <label for="name">{{'profile.name' | localize}}</label>
-        <small 
-          class="helper-text invalid" 
-          v-if="$v.name.$dirty && !$v.name.required"
+          required
+        ></v-text-field>
+        
+        <v-select
+          :items="langs"
+          :label="'shared.selectLang' | localize"
+          name="locale"
+          prepend-icon="mdi-translate"
+          item-text="name"
+          item-value="val"
+          v-model="locale"
+          required
+        ></v-select>
+
+        <v-btn
+          color="success"
+          type="submit"
         >
-          {{'profile.error.enterName' | localize}}
-        </small>
-      </div>
-
-      <div class="switch">
-        <label>
-          English
-          <input type="checkbox" v-model="isRuLocale">
-          <span class="lever"></span>
-          Русский
-        </label>
-      </div>
-
-      <button class="btn waves-effect waves-light" type="submit">
-        {{'shared.update' | localize}}
-        <v-icon dark right>mdi-send</v-icon>
-      </button>
-    </form>
+          <v-icon left>mdi-pencil</v-icon>
+          {{'shared.update' | localize}}
+        </v-btn>
+      </v-form>
+    </v-col>
   </div>
 </template>
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
-import { required } from 'vuelidate/lib/validators'
+import localizeFilter from "@/filters/localize.filter"
 
 export default {
   name: 'profile',
@@ -51,18 +52,26 @@ export default {
   },
   data: () => ({
     name: '',
-    isRuLocale: true
+    locale: '',
+    isValid: false,
+    langs: [
+      {
+        name: "English",
+        val: "en-US"
+      },
+      {
+        name: "Русский",
+        val: "ru-RU"
+      }
+    ],
+    nameRules: [
+      v => !!v || localizeFilter('shared.errors.enterName'),
+      v => (v && v.length >= 2) || localizeFilter('shared.errors.minLength') + ': ' + 2
+    ]
   }),
-  validations: {
-    name: {required}
-  },
   mounted() {
     this.name = this.info.name
-    this.isRuLocale = this.info.locale === 'ru-RU'
-
-    this.$nextTick(() => {
-      M.updateTextFields()
-    })
+    this.locale = this.info.locale
   },
   computed: {
     ...mapGetters(['info'])
@@ -70,24 +79,17 @@ export default {
   methods: {
     ...mapActions(['updateInfo']),
     async submitHandler() {
-      if(this.$v.$invalid) {
-        this.$v.$touch()
+      if(!this.isValid) {
         return
       }
 
       try {
         await this.updateInfo({
           name: this.name,
-          locale: this.isRuLocale ? 'ru-RU' : 'en-US'
+          locale: this.locale
         })
       } catch (e) {}
     }
   }
 }
 </script>
-
-<style scoped>
-  .switch {
-    margin-bottom: 2rem;
-  }
-</style>
