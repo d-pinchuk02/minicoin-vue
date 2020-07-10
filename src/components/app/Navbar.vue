@@ -13,9 +13,11 @@
     <v-menu offset-y>
       <template v-slot:activator="{ on }">
         <v-btn
-          icon large
+          large
+          text
           v-on="on"
         >
+          <span class="mr-2" v-show="!$vuetify.breakpoint.xs && !$vuetify.breakpoint.sm">{{name}}</span>
           <v-avatar
             size="32px"
             item
