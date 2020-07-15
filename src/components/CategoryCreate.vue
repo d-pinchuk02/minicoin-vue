@@ -1,72 +1,67 @@
 <template>
-  <div class="col s12 m6">
-    <div>
-      <div class="page-subtitle">
-        <h4>{{'categorycreate.title'| localize}}</h4>
-      </div>
+  <div>
+    <h2>{{'categorycreate.title' | localize}}</h2>
 
-      <form @submit.prevent="submitHandler">
-        <div class="input-field">
-          <input
-            id="name" 
-            type="text" 
-            v-model="title"
-            :class="{invalid: $v.title.$dirty && !$v.title.required}"
-          />
-          <label for="name">{{'categorycreate.name'| localize}}</label>
-          <span
-            class="helper-text invalid"
-            v-if="$v.title.$dirty && !$v.title.required"
-          >
-            {{'categorycreate.error.enterTitle'| localize}}
-          </span>
-        </div>
+    <v-divider class="mb-4"></v-divider>
 
-        <div class="input-field">
-          <input
-            id="limit"
-            type="number"
-            v-model.number="limit"
-            :class="{invalid: $v.limit.$dirty && !$v.limit.minValue}"
-          />
-          <label for="limit">{{'shared.limit'| localize}}</label>
-          <span
-            class="helper-text invalid"
-            v-if="$v.limit.$dirty && !$v.limit.minValue"
-          >
-            {{'categorycreate.error.minValue'| localize}}: {{$v.limit.$params.minValue.min}}
-          </span>
-        </div>
+    <v-form
+      v-model="isValid"
+      ref="form"
+      @submit.prevent="submitHandler"
+    >
+      <v-text-field
+        :label="'categorycreate.name' | localize"
+        :rules="titleRules"
+        name="title"
+        prepend-icon="mdi-format-letter-case"
+        type="text"
+        v-model.trim="title"
+        required
+      ></v-text-field>
+      
+      <v-text-field
+        :label="'shared.limit' | localize"
+        :rules="limitRules"
+        name="limit"
+        prepend-icon="mdi-cash-multiple"
+        type="number"
+        v-model="limit"
+        required
+      ></v-text-field>
 
-        <button class="btn waves-effect waves-light" type="submit">
-          {{'shared.create'| localize}}
-          <v-icon dark right>mdi-send</v-icon>
-        </button>
-      </form>
-    </div>
+      <v-btn
+        color="success"
+        type="submit"
+        :disabled="!isValid"
+      >
+        <v-icon left>mdi-plus</v-icon>
+        {{'shared.create' | localize}}
+      </v-btn>
+    </v-form>
   </div>
 </template>
 
 <script>
-import {required, minValue} from 'vuelidate/lib/validators'
 import localizeFilter from '@/filters/localize.filter'
 
 export default {
   data: () => ({
     title: '',
-    limit: 1
+    limit: 1,
+    isValid: false,
+    titleRules: [
+      v => !!v || localizeFilter('categorycreate.error.enterTitle'),
+      v => (v && v.length >= 2) || localizeFilter('shared.errors.minLength') + ': ' + 2
+    ],
+    limitRules: [
+      v => (v && +v >= 1) || localizeFilter('shared.errors.minValue') + ': ' + 1
+    ]
   }),
-  validations: {
-    title: {required},
-    limit: {minValue: minValue(1)}
-  },
-  mounted() {
-    M.updateTextFields()
-  },
   methods: {
     async submitHandler() {
-      if (this.$v.$invalid) {
-        this.$v.$touch()
+      this.$refs.form.validate()
+
+      if(!this.isValid) {
         return
       }
 
@@ -75,10 +70,9 @@ export default {
           title: this.title,
           limit: this.limit
         })
-
+        this.$refs.form.reset()
         this.title = ''
         this.limit = 1
-        this.$v.$reset()
         this.$message(localizeFilter('msg.categoryCreated'))
 
         this.$emit('created', category)

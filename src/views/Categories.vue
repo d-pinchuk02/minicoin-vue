@@ -1,22 +1,24 @@
 <template>
   <div>
-    <div class="page-title">
-      <h3>{{'categories.title'| localize}}</h3>
-    </div>
-    <section>
-      <Loader v-if="loading" />
-      <div class="row" v-else>
-        <CategoryCreate @created="addNewCategory" />
+    <h1>{{'categories.title' | localize}}</h1>
 
+    <v-divider class="mb-4"></v-divider>
+
+    <Loader v-if="loading" />
+    <v-row v-else>
+      <v-col cols="12" md="6" xs="12" sm="12">
+        <CategoryCreate @created="addNewCategory" />
+      </v-col>
+      <v-col cols="12" md="6" xs="12" sm="12">
         <CategoryEdit
           v-if="categories.length"
           :categories="categories"
           :key="categories.length + updateCount"
           @updated="updateCategories"
         />
-        <p v-else class="center">{{'shared.noCategories'| localize}}</p>
-      </div>
-    </section>
+        <v-alert v-else type="info">{{'shared.noCategories' | localize}}</v-alert>
+      </v-col>
+    </v-row>
   </div>
 </template>
 

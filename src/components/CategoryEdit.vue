@@ -1,66 +1,58 @@
 <template>
-  <div class="col s12 m6">
-    <div>
-      <div class="page-subtitle">
-        <h4>{{'categoryedit.title'| localize}}</h4>
-      </div>
+  <div>
+    <h2>{{'categoryedit.title' | localize}}</h2>
 
-      <form @submit.prevent="submitHandler">
-        <div class="input-field">
-          <select ref="select" v-model="current">
-            <option
-              v-for="c of categories"
-              :key="c.id"
-              :value="c.id"
-            >{{ c.title }}</option>
-          </select>
-          <label>{{'shared.selectCategory'| localize}}</label>
-        </div>
+    <v-divider class="mb-4"></v-divider>
 
-        <div class="input-field">
-          <input
-            id="name" 
-            type="text" 
-            v-model="title"
-            :class="{invalid: $v.title.$dirty && !$v.title.required}"
-          />
-          <label for="name">{{'categoryedit.name'| localize}}</label>
-          <span
-            class="helper-text invalid"
-            v-if="$v.title.$dirty && !$v.title.required"
-          >
-            {{'categoryedit.error.enterTitle'| localize}}
-          </span>
-        </div>
+    <v-form
+      v-model="isValid"
+      ref="form"
+      @submit.prevent="submitHandler"
+    >
+    <v-select
+        :items="categories"
+        :label="'shared.selectCategory' | localize"
+        name="category"
+        prepend-icon="mdi-shape"
+        item-text="title"
+        item-value="id"
+        v-model="current"
+        required
+      ></v-select>
 
-        <div class="input-field">
-          <input
-            id="limit"
-            type="number"
-            v-model.number="limit"
-            :class="{invalid: $v.limit.$dirty && !$v.limit.minValue}"
-            min="1"
-          />
-          <label for="limit">{{'shared.limit'| localize}}</label>
-          <span
-            class="helper-text invalid"
-            v-if="$v.limit.$dirty && !$v.limit.minValue"
-          >
-            {{'categoryedit.error.minValue'| localize}}: {{$v.limit.$params.minValue.min}}
-          </span>
-        </div>
+      <v-text-field
+        :label="'categoryedit.name' | localize"
+        :rules="titleRules"
+        name="title"
+        prepend-icon="mdi-format-letter-case"
+        type="text"
+        v-model.trim="title"
+        required
+      ></v-text-field>
+      
+      <v-text-field
+        :label="'shared.limit' | localize"
+        :rules="limitRules"
+        name="limit"
+        prepend-icon="mdi-cash-multiple"
+        type="number"
+        v-model="limit"
+        required
+      ></v-text-field>
 
-        <button class="btn waves-effect waves-light" type="submit">
-          {{'shared.update'| localize}}
-          <v-icon dark right>mdi-send</v-icon>
-        </button>
-      </form>
-    </div>
+      <v-btn
+        color="success"
+        type="submit"
+        :disabled="!isValid"
+      >
+        <v-icon left>mdi-pencil</v-icon>
+        {{'shared.update' | localize}}
+      </v-btn>
+    </v-form>
   </div>
 </template>
 
 <script>
-import {required, minValue} from 'vuelidate/lib/validators'
 import localizeFilter from '@/filters/localize.filter'
 
 export default {
@@ -71,15 +63,16 @@ export default {
     }
   },
   data: () => ({
-    select: null,
     title: '',
     limit: 1,
-    current: null
+    current: null,
+    titleRules: [
+      v => !!v || localizeFilter('categoryedit.error.enterTitle')
+    ],
+    limitRules: [
+      v => (v && +v >= 1) || localizeFilter('shared.errors.minValue') + ': ' + 1
+    ]
   }),
-  validations: {
-    title: {required},
-    limit: {minValue: minValue(1)}
-  },
   watch: {
     current(catId) {
       const {title, limit} = this.categories.find(c => c.id === catId)
@@ -93,14 +86,11 @@ export default {
     this.title = title
     this.limit = limit
   },
-  mounted() {
-    this.select = M.FormSelect.init(this.$refs.select)
-    M.updateTextFields()
-  },
   methods: {
     async submitHandler() {
-      if (this.$v.$invalid) {
-        this.$v.$touch()
+      this.$refs.form.validate()
+
+      if(!this.isValid) {
         return
       }
 
@@ -114,11 +104,6 @@ export default {
         this.$message(localizeFilter('msg.categoryUpdated'))
         this.$emit('updated', categoryData)
       } catch (e) {}
-    }
-  },
-  destroyed() {
-    if(this.select && this.select.destroy) {
-      this.select.destroy()
     }
   }
 }
