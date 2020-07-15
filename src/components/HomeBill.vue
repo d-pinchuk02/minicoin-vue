@@ -1,19 +1,22 @@
 <template>
-  <div class="col s12 m6 l4">
-    <div class="card light-blue bill-card">
-      <div class="card-content white-text">
-        <span class="card-title">{{'homebill.title' | localize}}</span>
-
-        <p
-          v-for="cur of currencies"
-          :key="cur"
-          class="currency-line"
-        >
-          <span>{{ getCurrency(cur) | currency(cur) }}</span>
-        </p>
+  <v-card color="blue" dark>
+    <v-card-title>{{'homebill.title' | localize}}</v-card-title>
+    <v-card-text>
+      <div
+        v-for="cur of currencies"
+        :key="cur"
+      >
+        <h2>{{ getCurrency(cur) | currency(cur) }}</h2>
+        <v-divider class="mt-3 mb-3"></v-divider>
       </div>
-    </div>
-  </div>
+    </v-card-text>
+    <v-card-actions>
+      <v-spacer></v-spacer>
+      <v-btn icon @click.prevent="$parent.refresh">
+        <v-icon>mdi-refresh</v-icon>
+      </v-btn>
+    </v-card-actions>
+  </v-card>
 </template>
 
 <script>
