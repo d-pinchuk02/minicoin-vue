@@ -1,35 +1,30 @@
 <template>
   <div>
-    <div class="page-title">
-      <h3>{{'history.title' | localize}}</h3>
-    </div>
+    <h1>{{'history.title' | localize}}</h1>
 
-    <div class="history-chart">
-      <canvas ref="canvas"></canvas>
-    </div>
+    <v-divider class="mb-4"></v-divider>
+    
+    <canvas ref="canvas"></canvas>
 
     <Loader v-if="loading"/>
-    <p v-else-if="!records.length" class="center">{{'history.noRecords' | localize}} <router-link to="/record">{{'history.addRecord' | localize}}</router-link></p>
+    <v-alert v-else-if="!records.length" type="info">
+      {{'shared.noRecords' | localize}} <router-link class="white--text" to="/record">{{'shared.addRecord' | localize}}</router-link>
+    </v-alert>
     <section v-else>
-      <HistoryTable :records="items" />
+      <HistoryTable class="mt-2" :records="items" :page="page" :key="page"/>
 
-      <Paginate 
+      <v-pagination
+        class="text-center mt-2"
         v-model="page"
-        :pageCount="pageCount"
-        :clickHandler="pageChangeHandler"
-        :prevText="'&lt;'"
-        :nextText="'&gt;'"
-        :containerClass="'pagination'"
-        :pageClass="'waves-effect'"
-        :marginPages="2"
-      />
+        :length="pageCount"
+        @input="pageChanged"
+      ></v-pagination>
     </section>
   </div>
 </template>
 
 <script>
 import localizeFilter from '@/filters/localize.filter'
-import paginationMixin from '@/mixins/pagination.mixin'
 import HistoryTable from '@/components/HistoryTable'
 import {Doughnut} from 'vue-chartjs' 
 
@@ -41,12 +36,16 @@ export default {
     }
   },
   extends: Doughnut,
-  mixins: [paginationMixin],
   data: () => ({
     loading: true,
-    records: []
+    records: [],
+    items: [],
+    page: 1,
+    pageCount: 1
   }),
   async mounted() {
+    this.page = +this.$route.params.page || 1
+
     this.records = await this.$store.dispatch('fetchRecords')
     const categories = await this.$store.dispatch('fetchCategories')
 
@@ -56,14 +55,14 @@ export default {
   },
   methods: {
     setup(categories) {
-      this.setupPagination(this.records.map(record => {
+      this.items = this.records.map(record => {
         return {
           ...record,
           categoryName: categories.find(c => c.id === record.categoryId).title,
           typeClass: record.type === 'income' ? 'green' : 'red',
           typeText: record.type === 'income' ? localizeFilter('shared.income') : localizeFilter('shared.outcome')
         }
-      }))
+      })
 
       this.renderChart({ // data
         labels: categories.map(c => c.title),
@@ -109,6 +108,12 @@ export default {
             borderWidth: 2
         }]
       }, { /* options */ })
+    },
+    pageChanged() {
+      this.$router.push('/history/page/' + this.page)
+    },
+    pageCountChanged(count) {
+      this.pageCount = count
     }
   },
   components: {
@@ -116,3 +121,10 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+  canvas {
+    max-width: 600px;
+    margin: 0 auto;
+  }
+</style>

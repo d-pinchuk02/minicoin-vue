@@ -1,31 +1,54 @@
 <template>
   <div>
-    <Loader v-if="loading" />
-    <div v-else-if="record">
-      <div class="breadcrumb-wrap">
-        <router-link to="/history" class="breadcrumb">{{'detailrecord.history' | localize}}</router-link>
-        <a @click.prevent class="breadcrumb">
-          {{ record.type === 'income'
-              ? localizeFilter('shared.income')
-              : localizeFilter('shared.outcome')
-          }}
-        </a>
-      </div>
-      <div class="row">
-        <div class="col s12 m6">
-          <div class="card" :class="record.type === 'income' ? 'green' : 'red'">
-            <div class="card-content white-text">
-              <p>{{'shared.description' | localize}}: {{record.description}}</p>
-              <p>{{'shared.amount' | localize}}: {{record.amount | currency}}</p>
-              <p>{{'shared.category' | localize}}: {{record.categoryName}}</p>
+    <h1>
+      <v-btn
+        icon
+        large
+        color="primary"
+        :to="'/history/page/' + this.$route.params.page"
+      >
+        <v-icon>mdi-arrow-left</v-icon>
+      </v-btn>
+      {{'detailrecord.title' | localize}}
+    </h1>
+    <v-divider class="mb-4"></v-divider>
 
-              <small>{{record.date | date('datetime')}}</small>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <p class="center" v-else>{{'detailrecord.noRecord' | localize}}</p>
+    <Loader v-if="loading" />
+    <v-col v-else-if="record" cols="12" xs="12" sm="6" md="6">
+      <v-card
+        outlined
+      >
+        <v-card-title>
+          {{record.amount | currency}}
+          <v-chip
+            class="ml-4"
+            :color="record.typeColor"
+            label
+            text-color="white"
+          >
+            <v-icon left>{{record.typeIcon}}</v-icon>
+            {{record.typeText}}
+          </v-chip>
+        </v-card-title>
+        <v-card-subtitle>{{record.date | date('datetime')}}</v-card-subtitle>
+        <v-card-text>
+          <v-chip
+            color="primary"
+            label
+            text-color="white"
+          >
+            <v-icon left>mdi-shape</v-icon>
+            {{record.categoryName}}
+          </v-chip>
+          <br/>
+          <br/>
+          {{record.description}}
+        </v-card-text>
+      </v-card>
+    </v-col>
+    <v-alert v-else type="error">
+      {{'detailrecord.noRecord' | localize}}
+    </v-alert>
   </div>
 </template>
 
@@ -48,9 +71,25 @@ export default {
     const record = await this.$store.dispatch('fetchRecordById', id)
     const category = await this.$store.dispatch('fetchCategoryById', record.categoryId)
 
+    if(!this.$route.params.page)
+      this.$router.push(`/detail/${id}/page/1`)
+
+    let typeText = record.type === 'income'
+              ? localizeFilter('shared.income')
+              : localizeFilter('shared.outcome')
+    let typeIcon = record.type === 'income'
+              ? 'mdi-plus'
+              : 'mdi-minus'
+    let typeColor = record.type === 'income'
+              ? 'green'
+              : 'red'
+
     this.record = {
       ...record,
-      categoryName: category.title
+      categoryName: category.title,
+      typeText,
+      typeIcon,
+      typeColor
     }
 
     this.loading = false
