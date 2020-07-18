@@ -2,7 +2,8 @@
   <v-app-bar
     app
     clipped-left
-    color="orange lighten-1"
+    color="orange"
+    class="pl-2"
   >
     <v-app-bar-nav-icon @click.prevent="$emit('click')"></v-app-bar-nav-icon>
 

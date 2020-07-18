@@ -1,5 +1,5 @@
 <template>
-  <v-app>
+  <v-app id="app">
     <Navbar @click="sidebarOpen = !sidebarOpen" />
     <Sidebar :value="sidebarOpen" :key="locale" />
     <Loader v-if="loading" />
