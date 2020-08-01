@@ -1,23 +1,7 @@
-# minicoin
+# MiniCoin
 
-## Это старая ветка, которая больше не обновляется! Она оставлена для т.н. "reference-only".
+[**Reference only**]
 
-_____
+This is the old branch that was used to prototype the application and is no longer updated.
 
-## Project setup
-```
-npm install
-```
-
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
-
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+Это старая ветка, которая использовалась для создания прототипа приложения, она больше не обновляется
