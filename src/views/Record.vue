@@ -13,12 +13,7 @@
     </v-alert>
 
     <v-col v-else cols="12" xs="12" sm="6">
-      <v-form
-        v-model="isValid"
-        ref="form"
-        lazy-validation
-        @submit.prevent="submitHandler"
-      >
+      <v-form v-model="isValid" ref="form" @submit.prevent="submitHandler">
         <v-select
           :items="categories"
           :label="'shared.selectCategory' | localize"
@@ -53,7 +48,7 @@
           name="amount"
           prepend-icon="mdi-cash-multiple"
           type="number"
-          v-model="amount"
+          v-model.number="amount"
           required
         ></v-text-field>
 
@@ -111,6 +106,7 @@ export default {
 
     if (this.categories.length) {
       this.category = this.categories[0].id;
+      this.$refs.form.validate();
     }
   },
   computed: {
@@ -149,8 +145,13 @@ export default {
           await this.$store.dispatch("updateInfo", { bill });
           this.$success(localizeFilter("msg.recordCreated"));
           this.$refs.form.reset();
+
           this.amount = 1;
           this.description = "";
+          this.category = this.categories[0].id;
+          this.type = "outcome";
+
+          this.$refs.form.validate();
         } catch (e) {}
       } else {
         this.$info(
