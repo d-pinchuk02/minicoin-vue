@@ -1,14 +1,10 @@
 <template>
   <div>
-    <h2>{{'categorycreate.title' | localize}}</h2>
+    <h2>{{ "categorycreate.title" | localize }}</h2>
 
     <v-divider class="mb-4"></v-divider>
 
-    <v-form
-      v-model="isValid"
-      ref="form"
-      @submit.prevent="submitHandler"
-    >
+    <v-form v-model="isValid" ref="form" @submit.prevent="submitHandler">
       <v-text-field
         :label="'categorycreate.name' | localize"
         :rules="titleRules"
@@ -18,7 +14,7 @@
         v-model.trim="title"
         required
       ></v-text-field>
-      
+
       <v-text-field
         :label="'shared.limit' | localize"
         :rules="limitRules"
@@ -29,55 +25,53 @@
         required
       ></v-text-field>
 
-      <v-btn
-        color="success"
-        type="submit"
-        :disabled="!isValid"
-      >
+      <v-btn color="success" type="submit" :disabled="!isValid">
         <v-icon left>mdi-plus</v-icon>
-        {{'shared.create' | localize}}
+        {{ "shared.create" | localize }}
       </v-btn>
     </v-form>
   </div>
 </template>
 
 <script>
-import localizeFilter from '@/filters/localize.filter'
+import localizeFilter from "@/filters/localize.filter";
 
 export default {
   data: () => ({
-    title: '',
+    title: "",
     limit: 1,
     isValid: false,
     titleRules: [
-      v => !!v || localizeFilter('categorycreate.error.enterTitle'),
-      v => (v && v.length >= 2) || localizeFilter('shared.errors.minLength') + ': ' + 2
+      v => !!v || localizeFilter("categorycreate.error.enterTitle"),
+      v =>
+        (v && v.length >= 2) ||
+        localizeFilter("shared.errors.minLength") + ": " + 2
     ],
     limitRules: [
-      v => (v && +v >= 1) || localizeFilter('shared.errors.minValue') + ': ' + 1
+      v => (v && +v >= 1) || localizeFilter("shared.errors.minValue") + ": " + 1
     ]
   }),
   methods: {
     async submitHandler() {
-      this.$refs.form.validate()
+      this.$refs.form.validate();
 
-      if(!this.isValid) {
-        return
+      if (!this.isValid) {
+        return;
       }
 
       try {
-        const category = await this.$store.dispatch('createCategory', {
+        const category = await this.$store.dispatch("createCategory", {
           title: this.title,
           limit: this.limit
-        })
-        this.$refs.form.reset()
-        this.title = ''
-        this.limit = 1
-        this.$message(localizeFilter('msg.categoryCreated'))
+        });
+        this.$refs.form.reset();
+        this.title = "";
+        this.limit = 1;
+        this.$success(localizeFilter("msg.categoryCreated"));
 
-        this.$emit('created', category)
+        this.$emit("created", category);
       } catch (e) {}
     }
   }
-}
+};
 </script>

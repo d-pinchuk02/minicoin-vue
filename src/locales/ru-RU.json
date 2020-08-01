@@ -24,6 +24,7 @@
 	"login.password": "Пароль",
 	"login.title": "Вход",
 	"msg.auth/email-already-in-use": "Такой email уже используется",
+	"msg.auth/too-many-requests": "Слишком много запросов",
 	"msg.auth/user-disabled": "Пользователь заблокирован",
 	"msg.auth/user-not-found": "Пользователь не найден",
 	"msg.auth/wrong-password": "Неверный email или пароль",

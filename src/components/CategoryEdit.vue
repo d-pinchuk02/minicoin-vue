@@ -1,15 +1,11 @@
 <template>
   <div>
-    <h2>{{'categoryedit.title' | localize}}</h2>
+    <h2>{{ "categoryedit.title" | localize }}</h2>
 
     <v-divider class="mb-4"></v-divider>
 
-    <v-form
-      v-model="isValid"
-      ref="form"
-      @submit.prevent="submitHandler"
-    >
-    <v-select
+    <v-form v-model="isValid" ref="form" @submit.prevent="submitHandler">
+      <v-select
         :items="categories"
         :label="'shared.selectCategory' | localize"
         name="category"
@@ -29,7 +25,7 @@
         v-model.trim="title"
         required
       ></v-text-field>
-      
+
       <v-text-field
         :label="'shared.limit' | localize"
         :rules="limitRules"
@@ -40,20 +36,16 @@
         required
       ></v-text-field>
 
-      <v-btn
-        color="success"
-        type="submit"
-        :disabled="!isValid"
-      >
+      <v-btn color="success" type="submit" :disabled="!isValid">
         <v-icon left>mdi-pencil</v-icon>
-        {{'shared.update' | localize}}
+        {{ "shared.update" | localize }}
       </v-btn>
     </v-form>
   </div>
 </template>
 
 <script>
-import localizeFilter from '@/filters/localize.filter'
+import localizeFilter from "@/filters/localize.filter";
 
 export default {
   props: {
@@ -63,35 +55,32 @@ export default {
     }
   },
   data: () => ({
-    title: '',
+    title: "",
     limit: 1,
     current: null,
-    titleRules: [
-      v => !!v || localizeFilter('categoryedit.error.enterTitle')
-    ],
+    titleRules: [v => !!v || localizeFilter("categoryedit.error.enterTitle")],
     limitRules: [
-      v => (v && +v >= 1) || localizeFilter('shared.errors.minValue') + ': ' + 1
+      v => (v && +v >= 1) || localizeFilter("shared.errors.minValue") + ": " + 1
     ]
   }),
   watch: {
     current(catId) {
-      const {title, limit} = this.categories.find(c => c.id === catId)
-      this.title = title
-      this.limit = limit
+      const { title, limit } = this.categories.find(c => c.id === catId);
+      this.title = title;
+      this.limit = limit;
     }
   },
   created() {
-    const {id, title, limit} = this.categories[0]
-    this.current = id,
-    this.title = title
-    this.limit = limit
+    const { id, title, limit } = this.categories[0];
+    (this.current = id), (this.title = title);
+    this.limit = limit;
   },
   methods: {
     async submitHandler() {
-      this.$refs.form.validate()
+      this.$refs.form.validate();
 
-      if(!this.isValid) {
-        return
+      if (!this.isValid) {
+        return;
       }
 
       try {
@@ -99,12 +88,12 @@ export default {
           id: this.current,
           title: this.title,
           limit: this.limit
-        }
-        await this.$store.dispatch('updateCategory', categoryData)
-        this.$message(localizeFilter('msg.categoryUpdated'))
-        this.$emit('updated', categoryData)
+        };
+        await this.$store.dispatch("updateCategory", categoryData);
+        this.$success(localizeFilter("msg.categoryUpdated"));
+        this.$emit("updated", categoryData);
       } catch (e) {}
     }
   }
-}
+};
 </script>

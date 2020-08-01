@@ -24,6 +24,7 @@
 	"login.password": "Password",
 	"login.title": "Login",
 	"msg.auth/email-already-in-use": "This email is already in use",
+	"msg.auth/too-many-requests": "Too many requests",
 	"msg.auth/user-disabled": "User banned",
 	"msg.auth/user-not-found": "User is not found",
 	"msg.auth/wrong-password": "Invalid email or password",
