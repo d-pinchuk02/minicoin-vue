@@ -1,19 +1,7 @@
-# microcrm
+# MiniCoin
 
-## Project setup
-```
-npm install
-```
+[**Reference only**]
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+This is an old branch that was used to migrate the application codebase to Vuetify, it is no longer updated.
 
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+Это старая ветка, которая использовалась для миграции кодовой базы приложения на Vuetify, она больше не обновляется
