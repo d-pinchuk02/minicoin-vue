@@ -1,23 +1,35 @@
 <template>
   <div>
-    <div class="page-title">
-      <h3>{{'planning.title' | localize}}</h3>
-      <h4>{{info.bill | currency('UAH')}}</h4>
-    </div>
+    <h1>
+      {{'planning.title' | localize}}
+      ({{info.bill | currency('UAH')}})
+    </h1>
 
-    <Loader v-if="loading"/>
-    <p v-else-if="!categories.length" class="center">{{'planning.noCategories' | localize}} <router-link to="/categories">{{'planning.addCategory' | localize}}</router-link></p>
-    <section v-else>
-      <div v-for="cat of categories" :key="cat.id">
-        <p>
-          <strong>{{cat.title}}:</strong>
-          {{cat.spent | currency}} {{'shared.of' | localize}} {{cat.limit | currency}}
-        </p>
-        <div class="progress" v-tooltip="cat.tooltip">
-          <div class="determinate" :class="[cat.progressColor]" :style="{width: cat.progressPercent + '%'}"></div>
-        </div>
-      </div>
-    </section>
+    <v-divider class="mb-4"></v-divider>
+
+    <Loader v-if="loading" />
+    <v-alert v-else-if="!categories.length" type="info">
+      {{'shared.noCategories' | localize}} <router-link class="white--text" to="/categories">{{'shared.addCategory' | localize}}</router-link>
+    </v-alert>
+    <v-col v-else cols="12" v-for="cat of categories" :key="cat">
+      <p>
+        <strong>{{cat.title}}:</strong>
+        {{cat.spent | currency}} {{'shared.of' | localize}} {{cat.limit | currency}}
+      </p>
+      <v-tooltip top>
+        <template v-slot:activator="{ on, attrs }">
+          <v-progress-linear
+            rounded="true"
+            height="8"
+            v-bind="attrs"
+            v-on="on"
+            :color="cat.progressColor"
+            :value="cat.progressPercent"
+          ></v-progress-linear>
+        </template>
+        <span>{{cat.tooltip}}</span>
+      </v-tooltip>
+    </v-col>
   </div>
 </template>
 

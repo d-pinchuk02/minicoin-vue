@@ -1,35 +1,11 @@
 <template>
-  <div>
-    <div class="app-loader">
-      <div class="preloader-wrapper big active">
-        <div class="spinner-layer" :class="color">
-          <div class="circle-clipper left">
-            <div class="circle"></div>
-          </div>
-          <div class="gap-patch">
-            <div class="circle"></div>
-          </div>
-          <div class="circle-clipper right">
-            <div class="circle"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <p class="center">{{'shared.loading' | localize}}</p>
-  </div>
+  <v-overlay>
+    <v-progress-circular indeterminate size="64"></v-progress-circular>
+    <p class="mt-2">{{'shared.loading' | localize}}</p>
+  </v-overlay>
 </template>
 
 <script>
 export default {
-  computed: {
-    color() {
-      const colors = [
-        "spinner-red-only",
-        "spinner-green-only",
-        "spinner-blue-only"
-      ];
-      return colors[Math.floor(Math.random() * 3)];
-    }
-  }
-};
+}
 </script>

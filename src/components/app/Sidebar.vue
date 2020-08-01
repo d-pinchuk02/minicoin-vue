@@ -1,19 +1,31 @@
 <template>
-  <ul class="sidenav app-sidenav" :class="{open: value}">
-
-    <router-link
-      v-for="link in links"
-      :key="link.url"
-      tag="li"
-      active-class="active"
-      :to="link.url"
-      :exact="link.exact"
+  <v-navigation-drawer
+      app
+      clipped
+      color="grey lighten-4"
+      :value="value"
     >
-      <a href="#" class="waves-effect waves-orange pointer">{{ link.title }}</a>
-    </router-link>
+    <v-list
+        dense
+        nav
+    >
+      <v-list-item
+        v-for="item in links"
+        :key="item.title"
+        :to="item.to"
+        router
+        exact
+      >
+        <v-list-item-icon>
+          <v-icon right>{{ item.icon }}</v-icon>
+        </v-list-item-icon>
 
-    
-  </ul>
+        <v-list-item-content>
+          <v-list-item-title>{{ item.title }}</v-list-item-title>
+        </v-list-item-content>
+      </v-list-item>
+    </v-list>
+  </v-navigation-drawer>
 </template>
 
 <script>
@@ -23,11 +35,31 @@ export default {
   props: ['value'],
   data: () => ({
     links: [
-      { title: localizeFilter('sidebar.bill'), url: '/', exact: true },
-      { title: localizeFilter('sidebar.history'), url: '/history' },
-      { title: localizeFilter('sidebar.planning'), url: '/planning' },
-      { title: localizeFilter('sidebar.record'), url: '/record' },
-      { title: localizeFilter('sidebar.categories'), url: '/categories' }
+      { 
+        title: localizeFilter('sidebar.bill'), 
+        icon: 'mdi-currency-usd',
+        to: '/' 
+      },
+      { 
+        title: localizeFilter('sidebar.history'), 
+        icon: 'mdi-history',
+        to: '/history'
+      },
+      { 
+        title: localizeFilter('sidebar.planning'), 
+        icon: 'mdi-trending-up',
+        to: '/planning'
+      },
+      { 
+        title: localizeFilter('sidebar.record'), 
+        icon: 'mdi-plus',
+        to: '/record'
+      },
+      { 
+        title: localizeFilter('sidebar.categories'), 
+        icon: 'mdi-shape',
+        to: '/categories'
+      }
     ]
   })
 }
